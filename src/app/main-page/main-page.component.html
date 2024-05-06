@@ -1,13 +1,223 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="main-page.component.css">
-  <title>Agro Assist</title>
-</head>
+
 <body>
-  <header>
+ <!-- ....header..... -->
+  <header >
+    
+
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          <img src="assets/img/logo.png" alt="" width="250" height="120" class="img-fluid ms-3">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a routerLink="/main-page-component">Home</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/how-it-works" class="ms-3">How it works?</a>
+            </li>
+          </ul>
+          <div class="d-flex">
+            <a routerLink="/get-assistant"><button type="submit " class="btn btn-light me-2">Get Assistent</button></a>
+            <a routerLink="/sign-in"><button type="submit " class="btn btn-light me-2 ">Sign in</button></a>
+            <a routerLink="/sign-up"><button type="submit " class="btn btn-light me-2 ">Sign up</button></a>
+        </div>
+        </div>
+      </div>
+    </nav>
+    
+  </header>
+  <!-- ...section..... -->
+  <main>
+  <section id="main"> 
+
+    <div class="container-fluid">
+      <div class="card bg-dark text-white position-relative">
+        <img src="assets/img/bg.jpg" class="card-img" alt="...">
+        <div class="card-img-overlay d-flex justify-content-center align-items-center" style="background-size: cover;">
+          <div>
+            <div class="container">
+              <div class="row ">
+                <div class="col-3"></div>
+                <div class="col-lg-6 shadow p-3 mb-5 bg-body-tertiary rounded col-md-12 col-sm-12 bg-light text-dark ">
+                  <h5 class="card-title">Empowering Farmers with Smart Solutions.</h5>
+                  <p class="card-text">Your trusted digital farming companion, providing personalized advice and solutions for every step of your agricultural journey. Harnessing technology to streamline farming practices and maximize yield potential.</p>
+                </div>
+                <div class="col-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- ....Farming.... -->
+  
+      <div class="container mt-5" style="margin-top: 1000px;">
+        <div class="row">
+          <h3>Farming</h3>
+          <div class="col-lg-6 col-md-6 col-sm-12 p-5">
+            <img src="assets/img/wheat.png" alt="" class="img-fluid">
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 p-5">
+            <ol>
+              <li>a</li>
+              <li>a</li>
+              <li>a</li>
+              <li>a</li>
+              <li>a</li>
+              <li>a</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- ....major cultivation in india... -->
+  
+      <div class="container-fluid mt-5" style="background-color:  rgb(145, 197, 68);">
+        <div class="container p-5">
+        <div class="row">
+          <h3>Major Cultivations in India</h3>
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+              <div class="card">
+                <img src="assets/img/rice.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Rice</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <div class="text-center"><a href="#" class="btn btn-success">Read More</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img src="assets/img/wheat.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Wheat</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <div class="text-center"><a href="#" class="btn btn-success">Read More</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img src="assets/img/sugarcane.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Sugarcane</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+                  <div class="text-center"><a href="#" class="btn btn-success">Read More</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row row-cols-1 row-cols-md-3 g-4 ">
+            <div class="col">
+              <div class="card">
+                <img src="assets/img/cotton.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Cotton</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <div class="text-center"><a href="#" class="btn btn-success">Read More</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img src="assets/img/tea.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Tea</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <div class="text-center"><a href="#" class="btn btn-success">Read More</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img src="assets/img/fruits.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Fruits</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+                  <div class="text-center"><a href="#" class="btn btn-success">Read More</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>   
+  </main>
+    
+   
+  
+  <!-- ...footer.... -->
+  <footer class="container-fluid mt-3 bg-success">
+    <div class="container text-white p-5">
+    <div class="row">
+      <div class="col text-center mt-3"><img src="assets/img/logo.png" alt="" width="250" height="120"></div>
+    </div>
+    <div class="row text-center mt-3">
+      <h5> Your trusted farming companion, cultivating success through technology and expertise.</h5>
+    </div>
+    <hr>
+    <div class="row text-center">
+      <h5>Reach out to us for inquiries, feedback, or partnership opportunities. We're here to help you 
+      succeed in your farming endeavors.</h5>
+    </div>
+    
+    <hr>
+    <div class="row">
+      
+      <div class="col-lg-6 col-md-6 col-sm-12  d-flex justify-content-start">
+        <h5 class="mb-3">Connect With Us</h5>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end">
+    
+     
+        <ul style="list-style: none;">
+          <li><h6><i class="bi bi-envelope"></i> Email:  demo&copy;gmail.com</h6></li>
+          <li><h6><i class="bi bi-telephone"></i> Call us:  0000000000</h6></li>
+          <li><h6><i class="bi bi-clock"></i> Timings:10:00am-6:00pm  </h6></li>
+        </ul>
+    
+     
+    
+    </div>
+
+      <div class="row mb-5">
+      <form class="d-flex">
+        <div class="col-lg-4 col-md-4 col-sm-6 ">
+          <input type="email" class="form-control" placeholder="Enter Email" id="inputEmail4">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 ms-3">
+          <button type="submit" class="btn btn-light">Sign in</button>
+        </div>
+      </form>
+      </div>
+    
+    
+  </div>
+  
+  </div>
+  
+  <div class="text-white pb-3"><p class="text-center ">Website Developed by Infosys Springboard Interns with Love
+  </p></div>
+    
+  </footer>
+
+
+  
+
+ </body>
+
+
+  <!-- <header>
     <div class="logo">
       <h1>GATEWAY TO<br>YOUR AGRICULTURAL EXCELLENCY</h1>
       <h2>AGRO ASSIST</h2>
@@ -34,6 +244,4 @@
   
   <footer>
     <p>&copy; 2024 Agro Assist.</p>
-  </footer>
-</body>
-</html>
+  </footer> -->

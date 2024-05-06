@@ -8,6 +8,7 @@ import { GetAssistComponent } from './get-assist/get-assist.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { MainPageComponent } from './main-page/main-page.component';
+import { HowItWorksComponent } from './how-it-works/how-it-works.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { MainPageComponent } from './main-page/main-page.component';
     GetAssistComponent,
     SignUpComponent,
     SignInComponent,
-    MainPageComponent
+    MainPageComponent,
+    HowItWorksComponent
   ],
   imports: [
     BrowserModule,
