@@ -2,34 +2,41 @@
 <body>
  <!-- ....header..... -->
   <header >
-    
 
-    
+
     <nav class="navbar navbar-expand-lg navbar-light bg-success">
       <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="#">
-          <img src="assets/img/logo.png" alt="" width="250" height="120" class="img-fluid ms-3">
+          <img src="assets/img/logo.png" alt="" width="180" height="80" class="img-fluid ms-3">
         </a>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <a class="nav-link" href="#" routerLink="/main-page-component">Home</a>
+          <a class="nav-link ms-2" href="#" routerLink="/how-it-works" >How it works?</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a routerLink="/main-page-component">Home</a>
+              <a routerLink="/get-assistant" class="btn btn-light m-2 text-dark">Get Assistant</a>
             </li>
             <li class="nav-item">
-              <a routerLink="/how-it-works" class="ms-3">How it works?</a>
+              <a routerLink="/sign-in" class="btn btn-light m-2  text-dark">Sign in</a>
             </li>
+            <li class="nav-item">
+              <a routerLink="/sign-up" class="btn btn-light m-2  text-dark">Sign up</a>
+            </li>
+
           </ul>
-          <div class="d-flex">
-            <a routerLink="/get-assistant"><button type="submit " class="btn btn-light me-2">Get Assistent</button></a>
-            <a routerLink="/sign-in"><button type="submit " class="btn btn-light me-2 ">Sign in</button></a>
-            <a routerLink="/sign-up"><button type="submit " class="btn btn-light me-2 ">Sign up</button></a>
         </div>
-        </div>
+       
       </div>
     </nav>
+    
+    
+    
+
+    
+
     
   </header>
   <!-- ...section..... -->
