@@ -1,31 +1,30 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GetAssistComponent } from './get-assist/get-assist.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
 import { SignInComponent } from './sign-in/sign-in.component';
-import { MainPageComponent } from './main-page/main-page.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+import { RouterModule} from '@angular/router';
+import { HomeComponent } from './home/home.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    GetAssistComponent,
-    SignUpComponent,
+    HomeComponent,
     SignInComponent,
-    MainPageComponent
+    SignUpComponent,
+    ChatbotComponent, 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    HttpClientModule 
+    RouterModule,
+    FormsModule
   ],
-  providers: [
-    provideClientHydration()
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
