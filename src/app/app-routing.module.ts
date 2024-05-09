@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MainPageComponent } from './main-page/main-page.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
-import { GetAssistComponent } from './get-assist/get-assist.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+import { HomeComponent } from './home/home.component';
+
 const routes: Routes = [
-  { path: '', component: MainPageComponent },
-  { path: 'get-assistant', component: GetAssistComponent },
-  { path: 'sign-in', component: SignInComponent },
-  { path: 'sign-up', component: SignUpComponent },
+  { path: '', component: HomeComponent, children: [
+    { path: 'sign-in', component: SignInComponent },
+    { path: 'sign-up', component: SignUpComponent },
+    { path: 'chatbot', component: ChatbotComponent }
+  ]}
 ];
 
 @NgModule({
