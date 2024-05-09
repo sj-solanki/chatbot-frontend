@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import * as annyang from 'annyang';
+//import * as annyang from 'annyang';
 
 @Component({
   selector: 'app-chatbot',
