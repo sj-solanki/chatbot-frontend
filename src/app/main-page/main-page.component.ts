@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+
 
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
-  styleUrl: './main-page.component.css'
+  styleUrls: ['./main-page.component.css'],
 })
-export class MainPageComponent {
+
+export class MainPageComponent  {
 
 }
+
