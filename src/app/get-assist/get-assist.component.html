@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
     <input type="text" [(ngModel)]="userInput" placeholder="Enter your search term">
     <button (click)="search()">Search</button>
   </div>
@@ -6,4 +6,35 @@
   <div *ngIf="searchResult">
     <p>Response:</p>
     <pre>{{ searchResult | json }}</pre>
+  </div> -->
+  <body>
+    
+    <section class="section">
+   <div class="container">
+  <div class="chatbox">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <div class="chat-header">
+    Chatbot
+    <button  class="clear-chat" (click)="clearChat()">Clear Chat</button>
   </div>
+  <div class="chat-messages">
+    <div class="message" *ngFor="let message of messages">
+      <div class="bubble-container" [ngClass]="message.sender === 'user'? 'right' : 'left'">
+        <div class="bubble" [ngClass]="message.sender === 'user'? 'user-bubble' : 'bot-bubble'">
+          {{ message.content }}
+        </div>
+      </div>
+      <div class="sender-text" *ngIf="message.sender === 'user'"></div>
+      <div class="sender-text" *ngIf="message.sender !== 'user'"></div>
+    </div>
+  </div>
+  <div class="chat-input">
+    <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message...">
+    <div class="voice-icon">
+      <button class="btn" (click)="startVoiceInput"><i class="fa fa-microphone" style="font-size:36px"></i></button>
+    </div>
+  </div>
+</div>
+</div> 
+</section>
+</body>

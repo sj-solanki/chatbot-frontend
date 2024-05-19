@@ -12,3 +12,11 @@
 .bi-google{
     color:	#34A853;
 }
+.background {
+
+  background-size: cover;
+  background-position: center;
+}
+body{
+  background-color:rgb(194, 224, 163);
+}

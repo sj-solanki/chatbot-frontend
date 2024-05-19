@@ -1,7 +1,16 @@
-
+body{
+  background-color:rgb(227, 235, 220);
+}
+nav{
+  border-radius: 40px;
+  background-color:rgb(194, 224, 163);
+}
 a{
   text-decoration: none;
-  color: white;
+  color: #000;
+}
+a:hover{
+  color:rgba(100, 16, 16, 0.813); 
 }
 .container,.container-fluid{
   background-size: cover;
@@ -12,25 +21,27 @@ a{
 }
 .nav-link:hover{
   padding-bottom: 5px; /* Adjust the value as needed */
-  border-bottom: 2px solid greenyellow;
+  border-bottom: 2px solid rgba(100, 16, 16, 0.813); 
   
   
 }
-h1{
-  color:greenyellow;
+.card-img{
+  background-position: center;
+  background-size: cover;
 }
-h1:hover{
- color:white;
-}
+
+
 #img-home{
-  border: solid greenyellow;
-  border-radius: 15%;
+  border: 2px solid rgba(100, 16, 16, 0.813);
+  border-radius: 30px;
+  height: 450px;
+  width: 600px;
 }
 .get-started-btn {
   padding: 15px 30px;
   font-size: 18px;
   border: none;
-  background-color:greenyellow; /* Green color */
+  background-color: rgb(124, 180, 68); /* Green color */
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -60,6 +71,13 @@ h1:hover{
 .navbar-nav .nav-item .nav-link.active {
   position: relative;
 }
+.btn:hover{
+  animation: pulse 0.5s infinite alternate;
+  background-color:rgb(168, 231, 66);  ;
+}
+.btn{
+ background-color:rgb(124, 180, 68); ;
+}
 
 .navbar-nav .nav-item .nav-link.active::after {
   content: "";
@@ -68,21 +86,23 @@ h1:hover{
   bottom: -3px;
   width: 100%;
   height: 2px; /* Thickness of the underline */
-  background-color:greenyellow /* Color of the underline */
+  background-color: rgb(124, 180, 68); 
 }
+
 #who-am-i {
-  background-color: black;
+  
   padding: 100px 0;
 }
 
 .section-title {
-  color:greenyellow;
+  color: rgb(124, 180, 68);
   font-size: 36px;
   margin-bottom: 30px;
 }
 
 .bullet-points {
   margin-top: 20px;
+  
 }
 
 .bullet-points ul {
@@ -94,7 +114,7 @@ h1:hover{
   position: relative;
   padding-left: 30px;
   font-size: 18px;
-  color: #fff;
+  color:rgba(100, 16, 16, 0.813); 
   margin-bottom: 10px;
 }
 
@@ -102,7 +122,7 @@ h1:hover{
   content: "\2022";
   position: absolute;
   left: 0;
-  color:greenyellow;
+  color: rgb(124, 180, 68);
   font-size: 24px;
   line-height: 1;
 }
@@ -126,11 +146,12 @@ h1:hover{
 
 .section-content {
   animation: fadeInUp 5s ease forwards ;
+  
 }
 /* Green-yellow theme */
 #contact-us {
-  background-color:black; /* Green-yellow */
-  color:greenyellow/* White text */
+  /* Green-yellow */
+  color: rgb(124, 180, 68);
 }
 
 /* Animations */
@@ -179,24 +200,25 @@ h1:hover{
 }
 
 .feature-icon {
-  color: greenyellow;
+  color:  rgb(124, 180, 68);
   margin-right: 10px;
   font-size:x-large;
 }
 
 .feature-text {
-  color: greenyellow;
+  color:rgba(100, 16, 16, 0.813); 
   font-size: x-large;
 }
 
 .footer {
-  background-color: #000;
+  /* background-color: #000; */
   padding: 50px 0;
-  color: #fff;
+  color: rgb(124, 180, 68);
 }
 
 .footer h3 {
-  color: #fff;
+  /* color: #fff; */
+  color: rgb(124, 180, 68);
 }
 
 .footer p {
@@ -213,13 +235,48 @@ h1:hover{
 }
 
 .social-links a {
-  color: #fff;
+  color:  rgb(194, 224, 163);
+  /* color: #fff; */
   font-size: 24px;
 }
 
 .social-links a:hover {
-  color: greenyellow; /* Change to desired hover color */
+  /* Change to desired hover color */
+  color:  rgba(100, 16, 16, 0.813);
 }
+h2{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: rgba(100, 16, 16, 0.813);
+  font-size:xx-large;
+
+}
+.form-group{
+  border:2px solid rgb(194, 224, 163);
+  border-radius: 10px;
+}
+
+p{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: rgba(100, 16, 16, 0.813);
+  font-size:larger;
+}
+/* .typewriter {
+  overflow: hidden; 
+  border-right: .15em solid orange;
+  white-space: nowrap; 
+  margin: 0 auto;
+  letter-spacing: .15em; 
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange }
+} */
 
 
 
