@@ -27,43 +27,51 @@ export class GetAssistComponent {
   //     }
   //   );
   // }
-   messages = [
+  messages = [
     { sender: 'bot', content: 'Hello! How can I help you?' }
   ];
   newMessage = '';
+  private recognition: any;
+
+  constructor() {
+    this.recognition = new (window as any).webkitSpeechRecognition();
+    this.recognition.continuous = false;
+    this.recognition.lang = 'en-US';
+    this.recognition.onresult = (event: any) => {
+      this.newMessage = event.results[0][0].transcript;
+    };
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   sendMessage() {
     if (this.newMessage.trim() !== '') {
       this.messages.push({ sender: 'user', content: this.newMessage });
       this.getResponse();
       this.newMessage = '';
-      //code to send the user's message to a server or API
     }
-}
-getResponse() {
-  //AI response logic here
-  this.messages.push({ sender: 'bot', content: 'This is a response from the chatbot.' });
-}
-//new
-private recognition: any;
+  }
 
-constructor() {
-  this.recognition = new (window as any).webkitSpeechRecognition();
-  this.recognition.continuous = false;
-  this.recognition.lang = 'en-US';
-  this.recognition.onresult = (event: any) => {
-    this.newMessage = event.results[0][0].transcript;
-  };
-}
+  getResponse() {
+    this.messages.push({ sender: 'bot', content: 'This is a response from the chatbot.' });
+  }
 
-startVoiceInput() {
-  this.recognition.start();
-}
+  startVoiceInput() {
+    this.recognition.start();
+  }
 
+  clearChat() {
+    this.messages = [
+      { sender: 'bot', content: 'Hello! How can I help you?' }
+    ];
+  }
 
-
-clearChat() {
-  this.messages = [
-    { sender: 'bot', content: 'Hello! How can I help you?' }
-  ];
-}
+  scrollToBottom() {
+    const chatMessages = document.querySelector('.chat-messages');
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }
 }
