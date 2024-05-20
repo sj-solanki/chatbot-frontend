@@ -69,13 +69,13 @@ body {
 }
 
 .user-bubble {
-  background-color: #dcf8c6;
+  background-color: rgb(194, 224, 163);
   border-radius: 15px 15px 15px 0;
   float: right;
 }
 
 .bot-bubble {
-  background-color: #e6e6e6;
+  background-color: rgb(214, 245, 184);
   border-radius: 15px 15px 0 15px;
   float: left;
 }
