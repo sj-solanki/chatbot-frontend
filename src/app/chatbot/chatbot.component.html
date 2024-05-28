@@ -7,9 +7,7 @@
   <div class="chat-messages" #chatMessages>
     <div class="message" *ngFor="let message of messages">
       <div class="bubble-container" [ngClass]="message.sender === 'user' ? 'right' : 'left'">
-        <div class="bubble" [ngClass]="message.sender === 'user' ? 'user-bubble' : 'bot-bubble'">
-          {{ message.content }}
-        </div>
+        <div class="bubble" [ngClass]="message.sender === 'user' ? 'user-bubble' : 'bot-bubble'" [innerHTML]="message.content"></div>
       </div>
     </div>
   </div>
