@@ -1,6 +1,10 @@
 import { Component, ViewChild, ElementRef, AfterViewChecked, Renderer2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FlaskService } from '../services/flask.service';
+import { SelectService } from '../services/select.service';
+import { InitService } from '../services/init.service';
+import { ConfirmService } from '../services/confirm.service';
 
 @Component({
   selector: 'app-chatbot',
@@ -15,11 +19,14 @@ export class ChatbotComponent implements AfterViewChecked {
   ];
   newMessage = '';
 
-  private flaskEndpoint = 'http://127.0.0.1:5000/process'; // Update this URL to match your Flask server
-  private selectEndpoint = 'http://localhost:3000/select'; // The select API endpoint for your Node.js server
-  private initEndpoint = 'http://localhost:3000/init'; // The init API endpoint for your Node.js server
-
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer, private renderer: Renderer2) { }
+  constructor(
+    private flaskService: FlaskService,
+    private selectService: SelectService,
+    private initService: InitService,
+    private confirmService: ConfirmService,
+    private sanitizer: DomSanitizer,
+    private renderer: Renderer2
+  ) { }
 
   sendMessage() {
     if (this.newMessage.trim() !== '') {
@@ -32,14 +39,14 @@ export class ChatbotComponent implements AfterViewChecked {
   getResponse() {
     const userMessage = this.messages[this.messages.length - 1].content as string;
 
-    this.http.post<any>(this.flaskEndpoint, { query: userMessage }).subscribe(response => {
+    this.flaskService.postQuery(userMessage).subscribe(response => {
       if (response.status === 'success') {
         const nodeResponse = response.node_response.data.kahani_cache_dev[0];
         const botMessage = this.formatResponse(nodeResponse);
         this.messages.push({ sender: 'bot', content: botMessage });
         this.addEnrollEventListeners();
       } else {
-        this.messages.push({ sender: 'bot', content: 'Sorry, item is not available or else try to send prompt in different way.' });
+        this.messages.push({ sender: 'bot', content: 'Sorry, item is not available or else try to send prompt in a different way.' });
       }
     }, error => {
       this.messages.push({ sender: 'bot', content: 'Sorry, something went wrong. Please try again.' });
@@ -67,38 +74,17 @@ export class ChatbotComponent implements AfterViewChecked {
         const courseId = button.getAttribute('data-course-id');
         const providerId = button.getAttribute('data-provider-id');
         if (courseId && providerId) {
-          this.renderer.listen(button, 'click', () => this.enroll(courseId, providerId));
+          this.renderer.listen(button, 'click', () => this.selectCourse(courseId, providerId));
         }
       });
     }, 0);
   }
 
-  enroll(courseId: string, providerId: string) {
-    const payload = {
-      context: {
-        "domain": "onest:learning-experiences",
-        "action": "select",
-        "version": "1.1.0",
-        "bap_id": "kahani-bap.tekdinext.com",
-        "bap_uri": "https://kahani-bap.tekdinext.com/",
-        "bpp_id": "sandbox.onest.network/adaptor-bpp/smartlab",
-        "bpp_uri": "https://sandbox.onest.network/adaptor-bpp/smartlab/bpp",
-        transaction_id: this.generateUUID(),
-        message_id: this.generateUUID(),
-        timestamp: new Date().toISOString()
-      },
-      message: {
-        order: {
-          provider: { id: providerId },
-          items: [{ id: courseId }]
-        }
-      }
-    };
-
-    this.http.post<any>(this.selectEndpoint, payload).subscribe(response => {
+  selectCourse(courseId: string, providerId: string) {
+    this.selectService.selectCourse(courseId, providerId).subscribe(response => {
       if (response && response.responses && response.responses.length > 0) {
         this.messages.push({ sender: 'bot', content: JSON.stringify(response, null, 2) });
-        this.addNextButton();
+        this.addNextButton(courseId, providerId);
       } else {
         this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
       }
@@ -107,18 +93,18 @@ export class ChatbotComponent implements AfterViewChecked {
     });
   }
 
-  addNextButton() {
+  addNextButton(courseId: string, providerId: string) {
     const nextButtonHtml = this.sanitizer.bypassSecurityTrustHtml(`<button class="next-button">Next</button>`);
     this.messages.push({ sender: 'bot', content: nextButtonHtml });
     setTimeout(() => {
       const nextButton = document.querySelector('.next-button');
       if (nextButton) {
-        this.renderer.listen(nextButton, 'click', () => this.showForm());
+        this.renderer.listen(nextButton, 'click', () => this.showForm(courseId, providerId));
       }
     }, 0);
   }
 
-  showForm() {
+  showForm(courseId: string, providerId: string) {
     const formHtml = this.sanitizer.bypassSecurityTrustHtml(`
       <form id="user-details-form">
         <label for="name">Name:</label>
@@ -136,12 +122,12 @@ export class ChatbotComponent implements AfterViewChecked {
     setTimeout(() => {
       const form = document.getElementById('user-details-form');
       if (form) {
-        this.renderer.listen(form, 'submit', (event) => this.handleSubmit(event));
+        this.renderer.listen(form, 'submit', (event) => this.handleSubmit(event, courseId, providerId));
       }
     }, 0);
   }
 
-  handleSubmit(event: Event) {
+  handleSubmit(event: Event, courseId: string, providerId: string) {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -151,13 +137,10 @@ export class ChatbotComponent implements AfterViewChecked {
       phone: formData.get('phone') as string,
       email: formData.get('email') as string,
     };
-    this.initUser(userDetails);
-  }
-
-  initUser(userDetails: any) {
-    this.http.post<any>(this.initEndpoint, userDetails).subscribe(response => {
+    this.initService.initUser(courseId, providerId, userDetails).subscribe(response => {
       if (response.status === 'success') {
         this.messages.push({ sender: 'bot', content: JSON.stringify(response.data, null, 2) });
+        this.confirmOrder(courseId, providerId, userDetails);
       } else {
         this.messages.push({ sender: 'bot', content: 'Initialization failed. Please try again.' });
       }
@@ -166,19 +149,23 @@ export class ChatbotComponent implements AfterViewChecked {
     });
   }
 
-  generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
+  confirmOrder(courseId: string, providerId: string, userDetails: any) {
+    this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
+      if (response.status === 'success') {
+        this.messages.push({ sender: 'bot', content: 'Enrollment confirmed successfully!' });
+      } else {
+        this.messages.push({ sender: 'bot', content: 'Confirmation failed. Please try again.' });
+      }
+    }, error => {
+      this.messages.push({ sender: 'bot', content: 'Confirmation failed. Please try again.' });
     });
   }
-
   clearChat() {
     this.messages = [
       { sender: 'bot', content: 'Hello! How can I help you?' }
     ];
   }
-
+ 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
