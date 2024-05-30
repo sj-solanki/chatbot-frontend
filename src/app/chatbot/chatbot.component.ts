@@ -1,3 +1,4 @@
+
 import { Component, ViewChild, ElementRef, AfterViewChecked, Renderer2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -19,19 +20,64 @@ export class ChatbotComponent implements AfterViewChecked {
   private selectEndpoint = 'http://localhost:3000/select'; // The select API endpoint for your Node.js server
   private initEndpoint = 'http://localhost:3000/init'; // The init API endpoint for your Node.js server
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer, private renderer: Renderer2) { }
+  private recognition: any;
 
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer, private renderer: Renderer2) {
+    this.initSpeechRecognition();
+  }
+
+  initSpeechRecognition() {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous = false;
+    this.recognition.interimResults = false;
+    this.recognition.lang = 'en-US';
+
+    this.recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      this.newMessage = transcript; 
+      // this.messages.push({ sender: 'user', content: transcript });
+      // this.getResponse(transcript);
+    };
+
+    this.recognition.onerror = (event: any) => {
+      this.messages.push({ sender: 'bot', content: 'Sorry, something went wrong with the voice recognition. Please try again.' });
+    };
+  }
+
+  startVoiceRecognition() {
+    this.recognition.start();
+  }
+
+
+  isMicrophoneActive: boolean = false;
+
+  activateMicrophone() {
+    this.isMicrophoneActive = true;
+  }
+  
+  deactivateMicrophone() {
+    this.isMicrophoneActive = false;
+  }
+  toggleMicrophone() {
+    if (this.isMicrophoneActive) {
+      this.deactivateMicrophone();
+    } else {
+      this.activateMicrophone();
+      this.startVoiceRecognition();
+    }
+  }
+  
+  
   sendMessage() {
     if (this.newMessage.trim() !== '') {
       this.messages.push({ sender: 'user', content: this.newMessage });
-      this.getResponse();
+      this.getResponse(this.newMessage);
       this.newMessage = '';
     }
   }
 
-  getResponse() {
-    const userMessage = this.messages[this.messages.length - 1].content as string;
-
+  getResponse(userMessage: string) {
     this.http.post<any>(this.flaskEndpoint, { query: userMessage }).subscribe(response => {
       if (response.status === 'success') {
         const nodeResponse = response.node_response.data.kahani_cache_dev[0];
