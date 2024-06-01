@@ -5,6 +5,7 @@ import { SelectService } from '../services/select.service';
 import { InitService } from '../services/init.service';
 import { ConfirmService } from '../services/confirm.service';
 import { ModalComponent } from '../modal/modal.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-chatbot',
@@ -19,6 +20,7 @@ export class ChatbotComponent implements AfterViewChecked {
     { sender: 'bot', content: 'Hello! How can I help you?' }
   ];
   newMessage = '';
+  recognition: any;
 
   constructor(
     private flaskService: FlaskService,
@@ -27,8 +29,52 @@ export class ChatbotComponent implements AfterViewChecked {
     private confirmService: ConfirmService,
     private sanitizer: DomSanitizer,
     private renderer: Renderer2,
-    private componentFactoryResolver: ComponentFactoryResolver
-  ) { }
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private http: HttpClient
+  ) { this.initSpeechRecognition() }
+
+
+  initSpeechRecognition() {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous = false;
+    this.recognition.interimResults = false;
+    this.recognition.lang = 'en-US';
+
+    this.recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      this.newMessage = transcript; 
+      // this.messages.push({ sender: 'user', content: transcript });
+      // this.getResponse(transcript);
+    };
+
+    this.recognition.onerror = (event: any) => {
+      this.messages.push({ sender: 'bot', content: 'Sorry, something went wrong with the voice recognition. Please try again.' });
+    };
+  }
+
+  startVoiceRecognition() {
+    this.recognition.start();
+  }
+
+
+  isMicrophoneActive: boolean = false;
+
+  activateMicrophone() {
+    this.isMicrophoneActive = true;
+  }
+  
+  deactivateMicrophone() {
+    this.isMicrophoneActive = false;
+  }
+  toggleMicrophone() {
+    if (this.isMicrophoneActive) {
+      this.deactivateMicrophone();
+    } else {
+      this.activateMicrophone();
+      this.startVoiceRecognition();
+    }
+  }
 
   sendMessage() {
     if (this.newMessage.trim() !== '') {
