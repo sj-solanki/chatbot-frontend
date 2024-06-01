@@ -17,8 +17,8 @@ export class SelectService {
         "version": "1.1.0",
         "bap_id": "kahani-bap.tekdinext.com",
         "bap_uri": "https://kahani-bap.tekdinext.com/",
-        "bpp_id": "kahani-bpp.tekdinext.com",
-        "bpp_uri": "https://kahani-bpp.tekdinext.com/",
+        "bpp_id": "sandbox.onest.network/adaptor-bpp/smartlab",
+        "bpp_uri": "https://sandbox.onest.network/adaptor-bpp/smartlab/bpp",
         transaction_id: this.generateUUID(),
         message_id: this.generateUUID(),
         timestamp: new Date().toISOString()

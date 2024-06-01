@@ -1,10 +1,10 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked, Renderer2 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, ViewChild, ElementRef, AfterViewChecked, Renderer2, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
+import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { FlaskService } from '../services/flask.service';
 import { SelectService } from '../services/select.service';
 import { InitService } from '../services/init.service';
 import { ConfirmService } from '../services/confirm.service';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-chatbot',
@@ -13,6 +13,7 @@ import { ConfirmService } from '../services/confirm.service';
 })
 export class ChatbotComponent implements AfterViewChecked {
   @ViewChild('chatMessages') private chatMessagesContainer!: ElementRef;
+  @ViewChild('modalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
 
   messages: { sender: string, content: string | SafeHtml }[] = [
     { sender: 'bot', content: 'Hello! How can I help you?' }
@@ -25,7 +26,8 @@ export class ChatbotComponent implements AfterViewChecked {
     private initService: InitService,
     private confirmService: ConfirmService,
     private sanitizer: DomSanitizer,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private componentFactoryResolver: ComponentFactoryResolver
   ) { }
 
   sendMessage() {
@@ -74,17 +76,29 @@ export class ChatbotComponent implements AfterViewChecked {
         const courseId = button.getAttribute('data-course-id');
         const providerId = button.getAttribute('data-provider-id');
         if (courseId && providerId) {
-          this.renderer.listen(button, 'click', () => this.selectCourse(courseId, providerId));
+          this.renderer.listen(button, 'click', () => this.openModal(courseId, providerId));
         }
       });
     }, 0);
   }
 
-  selectCourse(courseId: string, providerId: string) {
+  openModal(courseId: string, providerId: string) {
     this.selectService.selectCourse(courseId, providerId).subscribe(response => {
       if (response && response.responses && response.responses.length > 0) {
-        this.messages.push({ sender: 'bot', content: JSON.stringify(response, null, 2) });
-        this.addNextButton(courseId, providerId);
+        const selectContent = this.formatSelectResponse(response.responses);
+        const factory = this.componentFactoryResolver.resolveComponentFactory(ModalComponent);
+        const componentRef = this.modalContainer.createComponent(factory);
+        const modalInstance = componentRef.instance as ModalComponent;
+        modalInstance.content = selectContent;
+
+        modalInstance.close.subscribe(() => {
+          componentRef.destroy();
+        });
+
+        modalInstance.next.subscribe(() => {
+          componentRef.destroy();
+          this.showForm(courseId, providerId);
+        });
       } else {
         this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
       }
@@ -93,15 +107,15 @@ export class ChatbotComponent implements AfterViewChecked {
     });
   }
 
-  addNextButton(courseId: string, providerId: string) {
-    const nextButtonHtml = this.sanitizer.bypassSecurityTrustHtml(`<button class="next-button">Next</button>`);
-    this.messages.push({ sender: 'bot', content: nextButtonHtml });
-    setTimeout(() => {
-      const nextButton = document.querySelector('.next-button');
-      if (nextButton) {
-        this.renderer.listen(nextButton, 'click', () => this.showForm(courseId, providerId));
-      }
-    }, 0);
+  formatSelectResponse(responses: any[]): SafeHtml {
+    const responseHtml = responses.map(response => `
+      <div>
+        <p><strong>Course ID:</strong> ${response.course_id}</p>
+        <p><strong>Provider ID:</strong> ${response.provider_id}</p>
+        <p><strong>Details:</strong> ${response.details}</p>
+      </div>
+    `).join('');
+    return this.sanitizer.bypassSecurityTrustHtml(responseHtml);
   }
 
   showForm(courseId: string, providerId: string) {
@@ -160,12 +174,13 @@ export class ChatbotComponent implements AfterViewChecked {
       this.messages.push({ sender: 'bot', content: 'Confirmation failed. Please try again.' });
     });
   }
+
   clearChat() {
     this.messages = [
       { sender: 'bot', content: 'Hello! How can I help you?' }
     ];
   }
- 
+
   ngAfterViewChecked() {
     this.scrollToBottom();
   }

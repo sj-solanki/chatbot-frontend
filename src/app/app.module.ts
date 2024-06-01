@@ -9,6 +9,8 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
 import { RouterModule} from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ModalComponent } from './modal/modal.component';
+
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
     HomeComponent,
     SignInComponent,
     SignUpComponent,
-    ChatbotComponent, 
+    ChatbotComponent,
+    ModalComponent,
+    
   ],
   imports: [
     BrowserModule,
