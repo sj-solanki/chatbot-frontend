@@ -1,10 +1,27 @@
 <div class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-body" [innerHTML]="content"></div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" (click)="nextAction()">Next</button>
-        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+  <div class="modal-content">
+    <div class="modal-body">
+      <div *ngFor="let response of responses">
+        <div class="course-details">
+          <p><strong>Course Name:</strong> {{response.message.order.items[0].descriptor.name}}</p>
+          <img class="course-image" [src]="response.message.order.provider.descriptor.images[0].url" alt="Course Image">
+          <p><strong>Short Description:</strong> {{response.message.order.items[0].descriptor.short_desc}}</p>
+          <p><strong>Long Description:</strong> {{response.message.order.items[0].descriptor.long_desc}}</p>
+          <p><strong>Price:</strong> {{response.message.order.items[0].price.value}} {{response.message.order.items[0].price.currency}}</p>
+          <!-- Check if URL exists -->
+          <ng-container *ngIf="response.message.order.items[0].descriptor?.media?.length > 0">
+            <p><strong>URL:</strong> <a [href]="response.message.order.items[0].descriptor.media[0].url" target="_blank">Course Link</a></p>
+          </ng-container>
+          <!-- If URL does not exist -->
+          <ng-container *ngIf="response.message.order.items[0].descriptor?.media?.length === 0">
+            <p><strong>URL:</strong> N/A</p>
+          </ng-container>
+        </div>
       </div>
     </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" (click)="nextAction()">Next</button>
+      <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+    </div>
   </div>
-  
+</div>

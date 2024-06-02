@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked, Renderer2, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked, Renderer2, ViewContainerRef, ComponentFactoryResolver, Inject, PLATFORM_ID } from '@angular/core';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { FlaskService } from '../services/flask.service';
 import { SelectService } from '../services/select.service';
@@ -6,6 +6,7 @@ import { InitService } from '../services/init.service';
 import { ConfirmService } from '../services/confirm.service';
 import { ModalComponent } from '../modal/modal.component';
 import { HttpClient } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-chatbot',
@@ -21,8 +22,14 @@ export class ChatbotComponent implements AfterViewChecked {
   ];
   newMessage = '';
   recognition: any;
+  isMicrophoneActive: boolean = false;
+  waitingForConfirmation: boolean = false;
+  courseId!: string;
+  providerId!: string;
+  userDetails: any;
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private flaskService: FlaskService,
     private selectService: SelectService,
     private initService: InitService,
@@ -31,46 +38,59 @@ export class ChatbotComponent implements AfterViewChecked {
     private renderer: Renderer2,
     private componentFactoryResolver: ComponentFactoryResolver,
     private http: HttpClient
-  ) { this.initSpeechRecognition() }
-
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.initSpeechRecognition();
+    }
+  }
 
   initSpeechRecognition() {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    this.recognition = new SpeechRecognition();
-    this.recognition.continuous = false;
-    this.recognition.interimResults = false;
-    this.recognition.lang = 'en-US';
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      this.recognition = new SpeechRecognition();
+      this.recognition.continuous = false;
+      this.recognition.interimResults = false;
+      this.recognition.lang = 'hi-IN';
 
-    this.recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      this.newMessage = transcript; 
-      // this.messages.push({ sender: 'user', content: transcript });
-      // this.getResponse(transcript);
-    };
+      this.recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        this.newMessage = transcript;
+        console.log('Voice input:', transcript);
+        if (this.waitingForConfirmation) {
+          this.handleConfirmationResponse(transcript.toLowerCase());
+        }
+      };
 
-    this.recognition.onerror = (event: any) => {
-      this.messages.push({ sender: 'bot', content: 'Sorry, something went wrong with the voice recognition. Please try again.' });
-    };
+      this.recognition.onerror = (event: any) => {
+        console.error('Voice recognition error:', event.error);
+        this.messages.push({ sender: 'bot', content: 'Sorry, something went wrong with the voice recognition. Please try again.' });
+      };
+    }
   }
 
   startVoiceRecognition() {
-    this.recognition.start();
+    if (isPlatformBrowser(this.platformId)) {
+      console.log('Starting voice recognition...');
+      this.recognition.start();
+    }
   }
-
-
-  isMicrophoneActive: boolean = false;
 
   activateMicrophone() {
     this.isMicrophoneActive = true;
+    console.log('Microphone activated');
   }
-  
+
   deactivateMicrophone() {
     this.isMicrophoneActive = false;
+    console.log('Microphone deactivated');
   }
+
   toggleMicrophone() {
     if (this.isMicrophoneActive) {
+      console.log('Deactivating microphone...');
       this.deactivateMicrophone();
     } else {
+      console.log('Activating microphone...');
       this.activateMicrophone();
       this.startVoiceRecognition();
     }
@@ -79,7 +99,11 @@ export class ChatbotComponent implements AfterViewChecked {
   sendMessage() {
     if (this.newMessage.trim() !== '') {
       this.messages.push({ sender: 'user', content: this.newMessage });
-      this.getResponse();
+      if (this.waitingForConfirmation) {
+        this.handleConfirmationResponse(this.newMessage.toLowerCase());
+      } else {
+        this.getResponse();
+      }
       this.newMessage = '';
     }
   }
@@ -109,7 +133,7 @@ export class ChatbotComponent implements AfterViewChecked {
         <p><strong>Provider Name:</strong> ${course.provider_name}</p>
         <p><strong>Language:</strong> ${course.language}</p>
         <p><strong>Min Age:</strong> ${course.minAge}</p>
-        <button class="enroll-button" data-course-id="${course.item_id}" data-provider-id="${course.provider_id}">Enroll</button>
+        <button class="enroll-button" data-course-id="${course.item_id}" data-provider-id="${course.provider_id}">More Info</button>
       </div>
     `;
     return this.sanitizer.bypassSecurityTrustHtml(htmlContent);
@@ -131,11 +155,10 @@ export class ChatbotComponent implements AfterViewChecked {
   openModal(courseId: string, providerId: string) {
     this.selectService.selectCourse(courseId, providerId).subscribe(response => {
       if (response && response.responses && response.responses.length > 0) {
-        const selectContent = this.formatSelectResponse(response.responses);
         const factory = this.componentFactoryResolver.resolveComponentFactory(ModalComponent);
         const componentRef = this.modalContainer.createComponent(factory);
         const modalInstance = componentRef.instance as ModalComponent;
-        modalInstance.content = selectContent;
+        modalInstance.responses = response.responses;
 
         modalInstance.close.subscribe(() => {
           componentRef.destroy();
@@ -151,17 +174,6 @@ export class ChatbotComponent implements AfterViewChecked {
     }, error => {
       this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
     });
-  }
-
-  formatSelectResponse(responses: any[]): SafeHtml {
-    const responseHtml = responses.map(response => `
-      <div>
-        <p><strong>Course ID:</strong> ${response.course_id}</p>
-        <p><strong>Provider ID:</strong> ${response.provider_id}</p>
-        <p><strong>Details:</strong> ${response.details}</p>
-      </div>
-    `).join('');
-    return this.sanitizer.bypassSecurityTrustHtml(responseHtml);
   }
 
   showForm(courseId: string, providerId: string) {
@@ -191,16 +203,18 @@ export class ChatbotComponent implements AfterViewChecked {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
-    const userDetails = {
+    this.userDetails = {
       name: formData.get('name') as string,
       age: formData.get('age') as string,
       phone: formData.get('phone') as string,
       email: formData.get('email') as string,
     };
-    this.initService.initUser(courseId, providerId, userDetails).subscribe(response => {
+    this.initService.initUser(courseId, providerId, this.userDetails).subscribe(response => {
       if (response.status === 'success') {
-        this.messages.push({ sender: 'bot', content: JSON.stringify(response.data, null, 2) });
-        this.confirmOrder(courseId, providerId, userDetails);
+        this.messages.push({ sender: 'bot', content: 'Initialization successful. Do you want to confirm your order? (yes/no)' });
+        this.waitingForConfirmation = true;
+        this.courseId = courseId;
+        this.providerId = providerId;
       } else {
         this.messages.push({ sender: 'bot', content: 'Initialization failed. Please try again.' });
       }
@@ -209,15 +223,27 @@ export class ChatbotComponent implements AfterViewChecked {
     });
   }
 
+  handleConfirmationResponse(userResponse: string) {
+    this.waitingForConfirmation = false;
+    if (userResponse.includes('yes')) {
+      this.confirmOrder(this.courseId, this.providerId, this.userDetails);
+    } else if (userResponse.includes('no')) {
+      this.messages.push({ sender: 'bot', content: 'Anything else you need, let me know.' });
+    } else {
+      this.messages.push({ sender: 'bot', content: 'I didn\'t understand. Please reply with "yes" or "no".' });
+      this.waitingForConfirmation = true;
+    }
+  }
+
   confirmOrder(courseId: string, providerId: string, userDetails: any) {
     this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
       if (response.status === 'success') {
         this.messages.push({ sender: 'bot', content: 'Enrollment confirmed successfully!' });
       } else {
-        this.messages.push({ sender: 'bot', content: 'Confirmation failed. Please try again.' });
+        this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
       }
     }, error => {
-      this.messages.push({ sender: 'bot', content: 'Confirmation failed. Please try again.' });
+      this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
     });
   }
 
@@ -231,9 +257,11 @@ export class ChatbotComponent implements AfterViewChecked {
     this.scrollToBottom();
   }
 
-  private scrollToBottom(): void {
+  scrollToBottom() {
     try {
       this.chatMessagesContainer.nativeElement.scrollTop = this.chatMessagesContainer.nativeElement.scrollHeight;
-    } catch (err) { }
+    } catch (err) {
+      console.error('Could not scroll to bottom:', err);
+    }
   }
 }

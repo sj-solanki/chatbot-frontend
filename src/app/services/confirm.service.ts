@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { TransactionService } from './transaction-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class ConfirmService {
   private endpoint = 'https://kahani-api.tekdinext.com/confirm';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private transactionService: TransactionService) { }
 
   confirmOrder(courseId: string, providerId: string, userDetails: any) {
     const payload = {
@@ -19,8 +20,8 @@ export class ConfirmService {
         "bap_uri": "https://kahani-bap.tekdinext.com/",
         "bpp_id": "kahani-bpp.tekdinext.com",
         "bpp_uri": "https://kahani-bpp.tekdinext.com/",
-        transaction_id: this.generateUUID(),
-        message_id: this.generateUUID(),
+        transaction_id: this.transactionService.getTransactionId(),
+        message_id: this.transactionService.generateMessageId(),
         timestamp: new Date().toISOString()
       },
       message: {
@@ -50,7 +51,6 @@ export class ConfirmService {
               currency: "INR",
               value: "0"
             },
-           
             category_ids: ["Course"],
             rating: "NaN",
             rateable: true,
@@ -213,10 +213,10 @@ export class ConfirmService {
                 }
               },
               form: {
-                url: `https://onest-bap.tekdinext.com/application/${courseId}/${this.generateUUID()}`,
+                url: `https://onest-bap.tekdinext.com/application/${courseId}/${this.transactionService.generateMessageId()}`,
                 mime_type: "text/html",
                 resubmit: false,
-                submission_id: this.generateUUID()
+                submission_id: this.transactionService.generateMessageId()
               },
               required: true
             }
@@ -262,12 +262,5 @@ export class ConfirmService {
     };
 
     return this.http.post<any>(this.endpoint, payload);
-  }
-
-  private generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
   }
 }

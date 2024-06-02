@@ -1,5 +1,4 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 
 @Component({
   selector: 'app-modal',
@@ -7,7 +6,7 @@ import { SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./modal.component.css']
 })
 export class ModalComponent {
-  @Input() content: SafeHtml | null = null;
+  @Input() responses: any[] = [];
   @Output() close = new EventEmitter<void>();
   @Output() next = new EventEmitter<void>();
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { TransactionService } from './transaction-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class InitService {
   private endpoint = 'http://localhost:3000/init';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private transactionService: TransactionService) { }
 
   initUser(courseId: string, providerId: string, userDetails: any) {
     const payload = {
@@ -18,9 +19,8 @@ export class InitService {
         "bap_id": "kahani-bap.tekdinext.com",
         "bap_uri": "https://kahani-bap.tekdinext.com/",
         "bpp_id": "kahani-bpp.tekdinext.com",
-        "bpp_uri": "https://kahani-bpp.tekdinext.com/",
-        transaction_id: this.generateUUID(),
-        message_id: this.generateUUID(),
+        transaction_id: this.transactionService.getTransactionId(),
+        message_id: this.transactionService.generateMessageId(),
         timestamp: new Date().toISOString()
       },
       message: {
@@ -67,12 +67,5 @@ export class InitService {
     };
 
     return this.http.post<any>(this.endpoint, payload);
-  }
-
-  private generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
   }
 }

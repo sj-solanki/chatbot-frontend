@@ -17,12 +17,11 @@
       <button class="btn" (click)="toggleMicrophone()">
         <i class="fa fa-microphone" [ngClass]="{ 'active-microphone': isMicrophoneActive }" style="font-size:36px"></i>
       </button>
-      
-      
-
     </div>
+    
     <div class="send-icon">
       <button class="btn" (click)="sendMessage()"><i class="fa fa-send" style="font-size:36px"></i></button>
     </div>
   </div>
+  <ng-template #modalContainer></ng-template>
 </div>

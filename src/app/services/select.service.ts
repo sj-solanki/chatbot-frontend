@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { TransactionService } from './transaction-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class SelectService {
   private endpoint = 'http://localhost:3000/select';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private transactionService: TransactionService) { }
 
   selectCourse(courseId: string, providerId: string) {
     const body = {
@@ -17,10 +18,10 @@ export class SelectService {
         "version": "1.1.0",
         "bap_id": "kahani-bap.tekdinext.com",
         "bap_uri": "https://kahani-bap.tekdinext.com/",
-        "bpp_id": "sandbox.onest.network/adaptor-bpp/smartlab",
-        "bpp_uri": "https://sandbox.onest.network/adaptor-bpp/smartlab/bpp",
-        transaction_id: this.generateUUID(),
-        message_id: this.generateUUID(),
+        "bpp_id": "kahani-bpp.tekdinext.com",
+        "bpp_uri": "https://kahani-bpp.tekdinext.com/",
+        transaction_id: this.transactionService.getTransactionId(),
+        message_id: this.transactionService.generateMessageId(),
         timestamp: new Date().toISOString()
       },
       message: {
@@ -32,11 +33,5 @@ export class SelectService {
     };
     return this.http.post<any>(this.endpoint, body);
   }
-
-  private generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
 }
+
