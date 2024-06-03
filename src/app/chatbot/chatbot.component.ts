@@ -27,6 +27,7 @@ export class ChatbotComponent implements AfterViewChecked {
   courseId!: string;
   providerId!: string;
   userDetails: any;
+  selectedLanguage = 'en-US'; // Default to English
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -50,7 +51,7 @@ export class ChatbotComponent implements AfterViewChecked {
       this.recognition = new SpeechRecognition();
       this.recognition.continuous = false;
       this.recognition.interimResults = false;
-      this.recognition.lang = 'hi-IN';
+      this.recognition.lang = this.selectedLanguage;
 
       this.recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
@@ -65,6 +66,14 @@ export class ChatbotComponent implements AfterViewChecked {
         console.error('Voice recognition error:', event.error);
         this.messages.push({ sender: 'bot', content: 'Sorry, something went wrong with the voice recognition. Please try again.' });
       };
+    }
+  }
+
+  onLanguageChange(event: any) {
+    this.selectedLanguage = event.target.value;
+    if (this.recognition) {
+      this.recognition.lang = this.selectedLanguage;
+      console.log(`Language changed to ${this.selectedLanguage}`);
     }
   }
 
@@ -110,13 +119,19 @@ export class ChatbotComponent implements AfterViewChecked {
 
   getResponse() {
     const userMessage = this.messages[this.messages.length - 1].content as string;
-
+  
     this.flaskService.postQuery(userMessage).subscribe(response => {
       if (response.status === 'success') {
-        const nodeResponse = response.node_response.data.kahani_cache_dev[0];
-        const botMessage = this.formatResponse(nodeResponse);
-        this.messages.push({ sender: 'bot', content: botMessage });
-        this.addEnrollEventListeners();
+        const nodeResponses = response.node_response.data.kahani_cache_dev;
+        if (nodeResponses.length > 0) {
+          nodeResponses.forEach((nodeResponse: any) => {
+            const botMessage = this.formatResponse(nodeResponse);
+            this.messages.push({ sender: 'bot', content: botMessage });
+          });
+          this.addEnrollEventListeners();
+        } else {
+          this.messages.push({ sender: 'bot', content: 'Sorry, no items are available. Please try again.' });
+        }
       } else {
         this.messages.push({ sender: 'bot', content: 'Sorry, item is not available or else try to send prompt in a different way.' });
       }
@@ -190,6 +205,7 @@ export class ChatbotComponent implements AfterViewChecked {
         <button type="submit">Submit</button>
       </form>
     `);
+    this.messages.push({ sender: 'bot', content: 'Please fill the below details to continue' });
     this.messages.push({ sender: 'bot', content: formHtml });
     setTimeout(() => {
       const form = document.getElementById('user-details-form');
@@ -210,8 +226,8 @@ export class ChatbotComponent implements AfterViewChecked {
       email: formData.get('email') as string,
     };
     this.initService.initUser(courseId, providerId, this.userDetails).subscribe(response => {
-      if (response.status === 'success') {
-        this.messages.push({ sender: 'bot', content: 'Initialization successful. Do you want to confirm your order? (yes/no)' });
+      if (response && response.responses && response.responses.length > 0) {
+        this.messages.push({ sender: 'bot', content: ' Do you want to confirm your order? (yes/no)' });
         this.waitingForConfirmation = true;
         this.courseId = courseId;
         this.providerId = providerId;
@@ -227,6 +243,7 @@ export class ChatbotComponent implements AfterViewChecked {
     this.waitingForConfirmation = false;
     if (userResponse.includes('yes')) {
       this.confirmOrder(this.courseId, this.providerId, this.userDetails);
+     
     } else if (userResponse.includes('no')) {
       this.messages.push({ sender: 'bot', content: 'Anything else you need, let me know.' });
     } else {
@@ -237,8 +254,9 @@ export class ChatbotComponent implements AfterViewChecked {
 
   confirmOrder(courseId: string, providerId: string, userDetails: any) {
     this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
-      if (response.status === 'success') {
+      if (response && response.responses && response.responses.length > 0) {
         this.messages.push({ sender: 'bot', content: 'Enrollment confirmed successfully!' });
+        this.messages.push({ sender: 'bot', content: 'Anything else you need, let me know.' });
       } else {
         this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
       }

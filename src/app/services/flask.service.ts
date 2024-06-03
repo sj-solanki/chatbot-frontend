@@ -11,6 +11,7 @@ export class FlaskService {
 
   postQuery(query: string) {
     const body = { query };
+    console.log(body)
     return this.http.post<any>(this.endpoint, body);
   }
 }

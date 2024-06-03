@@ -3,6 +3,7 @@
   <div class="chat-header">
     Chatbot
     <button class="clear-chat" (click)="clearChat()">Clear Chat</button>
+    
   </div>
   <div class="chat-messages" #chatMessages>
     <div class="message" *ngFor="let message of messages">
@@ -18,6 +19,10 @@
         <i class="fa fa-microphone" [ngClass]="{ 'active-microphone': isMicrophoneActive }" style="font-size:36px"></i>
       </button>
     </div>
+    <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange($event)">
+      <option value="en-US">English</option>
+      <option value="hi-IN">Hindi</option>
+    </select>
     
     <div class="send-icon">
       <button class="btn" (click)="sendMessage()"><i class="fa fa-send" style="font-size:36px"></i></button>

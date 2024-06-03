@@ -19,6 +19,7 @@ export class InitService {
         "bap_id": "kahani-bap.tekdinext.com",
         "bap_uri": "https://kahani-bap.tekdinext.com/",
         "bpp_id": "kahani-bpp.tekdinext.com",
+        "bpp_uri": "https://kahani-bpp.tekdinext.com/",
         transaction_id: this.transactionService.getTransactionId(),
         message_id: this.transactionService.generateMessageId(),
         timestamp: new Date().toISOString()
