@@ -161,14 +161,24 @@ export class ChatbotComponent implements AfterViewChecked {
         const courseId = button.getAttribute('data-course-id');
         const providerId = button.getAttribute('data-provider-id');
         if (courseId && providerId) {
-          this.renderer.listen(button, 'click', () => this.openModal(courseId, providerId));
+          this.renderer.listen(button, 'click', () => this.Select(courseId, providerId));
         }
       });
     }, 0);
   }
-
-  openModal(courseId: string, providerId: string) {
-    this.selectService.selectCourse(courseId, providerId).subscribe(response => {
+  Select(courseId: string, providerId: string) {
+    this.selectService.selectCourse(courseId, providerId, ).subscribe(response => {
+      if (response && response.responses && response.responses.length > 0) {
+        this.showForm(courseId, providerId);
+      } else {
+        this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
+      }
+    }, error => {
+      this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
+    });
+  }
+  openModal(courseId: string, providerId: string, userDetails:any) {
+    this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
       if (response && response.responses && response.responses.length > 0) {
         const factory = this.componentFactoryResolver.resolveComponentFactory(ModalComponent);
         const componentRef = this.modalContainer.createComponent(factory);
@@ -179,10 +189,10 @@ export class ChatbotComponent implements AfterViewChecked {
           componentRef.destroy();
         });
 
-        modalInstance.next.subscribe(() => {
-          componentRef.destroy();
-          this.showForm(courseId, providerId);
-        });
+       // modalInstance.next.subscribe(() => {
+         // componentRef.destroy();
+          //this.showForm(courseId, providerId);
+        //});
       } else {
         this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
       }
@@ -242,7 +252,7 @@ export class ChatbotComponent implements AfterViewChecked {
   handleConfirmationResponse(userResponse: string) {
     this.waitingForConfirmation = false;
     if (userResponse.includes('yes')) {
-      this.confirmOrder(this.courseId, this.providerId, this.userDetails);
+      this.openModal(this.courseId, this.providerId, this.userDetails);
      
     } else if (userResponse.includes('no')) {
       this.messages.push({ sender: 'bot', content: 'Anything else you need, let me know.' });
