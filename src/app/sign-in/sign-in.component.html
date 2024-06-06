@@ -31,15 +31,16 @@
           <div class="col-lg-12 text-center">OR</div>
         </div>
         <div>
-        <form>
-          <div class="mb-3">
+        <form (ngSubmit)="onSubmit()">
+          <div class="mb-3 form-group">
             <label for="exampleInputEmail1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  [(ngModel)]="email" name="email" required>
+            <div *ngIf="!emailValid && email" class="text-danger">Invalid email format</div>
             <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
           </div>
           <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1">
+            <input type="password" class="form-control" id="exampleInputPassword1" [(ngModel)]="password" name="password" required>
           </div>
           <div class="text-end"><a href="#" class="btn btn-link">Forgot Password?</a></div>
           <!-- <div class="mb-3 form-check">

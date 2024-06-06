@@ -3,9 +3,13 @@
       <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-horizontal">
         <a class="navbar-brand" href="#">AgroAssist</a>
         <div class="ml-auto d-flex align-items-center">
-          <button class="nav-link btn btn-link mr-2" routerLink="/sign-in">Sign In</button>
+          <!-- <button class="nav-link btn btn-link mr-2" routerLink="/sign-in">Sign In</button>
           <button class="nav-link btn btn-link mr-2" routerLink="/sign-up">Sign Up</button>
-          <button class="nav-link btn btn-link" routerLink="/chatbot">Get Assistant</button>
+          <button class="nav-link btn btn-link" routerLink="/chatbot">Get Assistant</button> -->
+          <button class="nav-link btn btn-link mr-2" routerLink="/sign-in" *ngIf="!checkIsLoggedIn()">Sign In</button>
+        <!-- <button class="nav-link btn btn-link mr-2" routerLink="/sign-up" *ngIf="!checkIsLoggedIn()">Sign Up</button> -->
+        <button class="nav-link btn btn-link" routerLink="/chatbot">Get Assistant</button>
+        <button class="nav-link btn btn-link" (click)="logout()" routerLink="/sign-in" *ngIf="checkIsLoggedIn()">Logout</button>
         </div>
       </nav>
     </header>

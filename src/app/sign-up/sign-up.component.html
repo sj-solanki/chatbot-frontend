@@ -36,19 +36,19 @@
           <div class="col-lg-12 text-center">OR</div>
         </div>
         <div>
-        <form>
+        <form  (ngSubmit)="onSubmit()" #signUpForm="ngForm">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Full Name</label>
-                <input type="text" class="form-control"  aria-label="Fullname" aria-describedby="addon-wrapping">
+                <input type="text" class="form-control"  aria-label="Fullname" aria-describedby="addon-wrapping" [(ngModel)]="name" name="name" required>
               </div>
-          <div class="mb-3">
+          <div class="mb-3 form-group">
             <label for="exampleInputEmail1" class="form-label">Email address</label>
-            <input type="email" class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp">
-            
+            <input type="email" class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp" [(ngModel)]="email" name="email" required>
+            <div *ngIf="!emailValid && email" class="text-danger">Invalid email format</div>
           </div>
           <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1">
+            <input type="password" class="form-control" id="exampleInputPassword1" [(ngModel)]="password" name="password" required>
           </div>
           <div class="mt-2 text-center"><button type="submit" class="btn btn-success">Create Account</button></div>
          
