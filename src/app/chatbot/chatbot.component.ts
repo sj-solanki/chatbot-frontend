@@ -177,29 +177,6 @@ export class ChatbotComponent implements AfterViewChecked {
       this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
     });
   }
-  openModal(courseId: string, providerId: string, userDetails:any) {
-    this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
-      if (response && response.responses && response.responses.length > 0) {
-        const factory = this.componentFactoryResolver.resolveComponentFactory(ModalComponent);
-        const componentRef = this.modalContainer.createComponent(factory);
-        const modalInstance = componentRef.instance as ModalComponent;
-        modalInstance.responses = response.responses;
-
-        modalInstance.close.subscribe(() => {
-          componentRef.destroy();
-        });
-
-       // modalInstance.next.subscribe(() => {
-         // componentRef.destroy();
-          //this.showForm(courseId, providerId);
-        //});
-      } else {
-        this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
-      }
-    }, error => {
-      this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
-    });
-  }
 
   showForm(courseId: string, providerId: string) {
     const formHtml = this.sanitizer.bypassSecurityTrustHtml(`
@@ -261,6 +238,39 @@ export class ChatbotComponent implements AfterViewChecked {
       this.waitingForConfirmation = true;
     }
   }
+
+
+  openModal(courseId: string, providerId: string, userDetails:any) {
+    this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
+      if (response && response.responses && response.responses.length > 0) {
+        this.messages.push({ sender: 'bot', content: 'Enrollment confirmed successfully!' });
+        this.messages.push({ sender: 'bot', content: 'Anything else you need, let me know.' });
+        const factory = this.componentFactoryResolver.resolveComponentFactory(ModalComponent);
+        const componentRef = this.modalContainer.createComponent(factory);
+        const modalInstance = componentRef.instance as ModalComponent;
+        modalInstance.responses = response.responses;
+
+        modalInstance.close.subscribe(() => {
+          componentRef.destroy();
+        });
+
+       // modalInstance.next.subscribe(() => {
+         // componentRef.destroy();
+          //this.showForm(courseId, providerId);
+        //});
+      } else {
+        this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
+      }
+    }, error => {
+      this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
+    });
+  }
+
+  
+
+  
+
+  
 
   confirmOrder(courseId: string, providerId: string, userDetails: any) {
     this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
