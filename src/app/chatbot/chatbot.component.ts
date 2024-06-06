@@ -28,6 +28,7 @@ export class ChatbotComponent implements AfterViewChecked {
   providerId!: string;
   userDetails: any;
   selectedLanguage = 'en-US'; // Default to English
+  loading: boolean = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -116,11 +117,13 @@ export class ChatbotComponent implements AfterViewChecked {
       this.newMessage = '';
     }
   }
-
   getResponse() {
     const userMessage = this.messages[this.messages.length - 1].content as string;
-  
+    this.loading = true; // Set loading to true before making the API call
+    
     this.flaskService.postQuery(userMessage).subscribe(response => {
+      this.loading = false; // Set loading to false after receiving the response
+  
       if (response.status === 'success') {
         const nodeResponses = response.node_response.data.kahani_cache_dev;
         if (nodeResponses.length > 0) {
@@ -136,9 +139,11 @@ export class ChatbotComponent implements AfterViewChecked {
         this.messages.push({ sender: 'bot', content: 'Sorry, item is not available or else try to send prompt in a different way.' });
       }
     }, error => {
+      this.loading = false; // Ensure loading is false even if there's an error
       this.messages.push({ sender: 'bot', content: 'Sorry, something went wrong. Please try again.' });
     });
   }
+  
 
   formatResponse(course: any): SafeHtml {
     const htmlContent = `
@@ -167,13 +172,18 @@ export class ChatbotComponent implements AfterViewChecked {
     }, 0);
   }
   Select(courseId: string, providerId: string) {
-    this.selectService.selectCourse(courseId, providerId, ).subscribe(response => {
+    this.loading = true;
+    
+    this.selectService.selectCourse(courseId, providerId).subscribe(response => {
+      this.loading = false;
+  
       if (response && response.responses && response.responses.length > 0) {
         this.showForm(courseId, providerId);
       } else {
         this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
       }
     }, error => {
+      this.loading = false;
       this.messages.push({ sender: 'bot', content: 'Enrollment confirmation failed. Please try again.' });
     });
   }
@@ -202,29 +212,36 @@ export class ChatbotComponent implements AfterViewChecked {
     }, 0);
   }
 
-  handleSubmit(event: Event, courseId: string, providerId: string) {
-    event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-    this.userDetails = {
-      name: formData.get('name') as string,
-      age: formData.get('age') as string,
-      phone: formData.get('phone') as string,
-      email: formData.get('email') as string,
-    };
-    this.initService.initUser(courseId, providerId, this.userDetails).subscribe(response => {
-      if (response && response.responses && response.responses.length > 0) {
-        this.messages.push({ sender: 'bot', content: ' Do you want to confirm your order? (yes/no)' });
-        this.waitingForConfirmation = true;
-        this.courseId = courseId;
-        this.providerId = providerId;
-      } else {
-        this.messages.push({ sender: 'bot', content: 'Initialization failed. Please try again.' });
-      }
-    }, error => {
+  
+handleSubmit(event: Event, courseId: string, providerId: string) {
+  event.preventDefault();
+  this.loading = true;
+  
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
+  this.userDetails = {
+    name: formData.get('name') as string,
+    age: formData.get('age') as string,
+    phone: formData.get('phone') as string,
+    email: formData.get('email') as string,
+  };
+
+  this.initService.initUser(courseId, providerId, this.userDetails).subscribe(response => {
+    this.loading = false;
+
+    if (response && response.responses && response.responses.length > 0) {
+      this.messages.push({ sender: 'bot', content: 'Do you want to confirm your order? (yes/no)' });
+      this.waitingForConfirmation = true;
+      this.courseId = courseId;
+      this.providerId = providerId;
+    } else {
       this.messages.push({ sender: 'bot', content: 'Initialization failed. Please try again.' });
-    });
-  }
+    }
+  }, error => {
+    this.loading = false;
+    this.messages.push({ sender: 'bot', content: 'Initialization failed. Please try again.' });
+  });
+}
 
   handleConfirmationResponse(userResponse: string) {
     this.waitingForConfirmation = false;
@@ -240,32 +257,33 @@ export class ChatbotComponent implements AfterViewChecked {
   }
 
 
-  openModal(courseId: string, providerId: string, userDetails:any) {
+ openModal(courseId: string, providerId: string, userDetails: any) {
+    this.loading = true;
+    
     this.confirmService.confirmOrder(courseId, providerId, userDetails).subscribe(response => {
+      this.loading = false;
+  
       if (response && response.responses && response.responses.length > 0) {
         this.messages.push({ sender: 'bot', content: 'Enrollment confirmed successfully!' });
         this.messages.push({ sender: 'bot', content: 'Anything else you need, let me know.' });
+        
         const factory = this.componentFactoryResolver.resolveComponentFactory(ModalComponent);
         const componentRef = this.modalContainer.createComponent(factory);
         const modalInstance = componentRef.instance as ModalComponent;
         modalInstance.responses = response.responses;
-
+  
         modalInstance.close.subscribe(() => {
           componentRef.destroy();
         });
-
-       // modalInstance.next.subscribe(() => {
-         // componentRef.destroy();
-          //this.showForm(courseId, providerId);
-        //});
+  
       } else {
         this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
       }
     }, error => {
+      this.loading = false;
       this.messages.push({ sender: 'bot', content: 'Enrollment failed. Please try again.' });
     });
   }
-
   
 
   

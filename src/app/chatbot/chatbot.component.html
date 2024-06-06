@@ -3,13 +3,18 @@
   <div class="chat-header btn-gradient-20">
     Chatbot
     <button class="clear-chat" (click)="clearChat()">Clear Chat</button>
-    
   </div>
   <div class="chat-messages" #chatMessages>
     <div class="message" *ngFor="let message of messages">
       <div class="bubble-container" [ngClass]="message.sender === 'user' ? 'right' : 'left'">
         <div class="bubble" [ngClass]="message.sender === 'user' ? 'user-bubble' : 'bot-bubble'" [innerHTML]="message.content"></div>
       </div>
+    </div>
+    <div *ngIf="loading" class="loading-message">
+      <span class="loading-text">Loading</span>
+      <span class="dot1">.</span>
+      <span class="dot2">.</span>
+      <span class="dot3">.</span>
     </div>
   </div>
   <div class="chat-input">
@@ -23,7 +28,6 @@
       <option value="en-US">English</option>
       <option value="hi-IN">Hindi</option>
     </select>
-    
     <div class="send-icon">
       <button class="btn" (click)="sendMessage()"><i class="fa fa-send" style="font-size:36px"></i></button>
     </div>
