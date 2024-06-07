@@ -208,3 +208,18 @@ rgba(128, 128, 128, 0.1);
     opacity: 1;
   }
 }
+
+.icon {
+  width: 30px; /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
+  margin-right: 5px; /* Adjust spacing between icon and message */
+}
+
+.right {
+  justify-content: flex-end;
+}
+
+.left {
+  justify-content: flex-start;
+}
+

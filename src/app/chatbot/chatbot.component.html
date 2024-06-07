@@ -7,9 +7,12 @@
   <div class="chat-messages" #chatMessages>
     <div class="message" *ngFor="let message of messages">
       <div class="bubble-container" [ngClass]="message.sender === 'user' ? 'right' : 'left'">
+        <img *ngIf="message.sender === 'bot'" src="assets/img/chatIcon.png" alt="Chatbot Icon" class="icon">
         <div class="bubble" [ngClass]="message.sender === 'user' ? 'user-bubble' : 'bot-bubble'" [innerHTML]="message.content"></div>
+        <img *ngIf="message.sender === 'user'" src="assets/img/userIcon.png" alt="User Icon" class="icon">
       </div>
     </div>
+    
     <div *ngIf="loading" class="loading-message">
       <span class="loading-text">Loading</span>
       <span class="dot1">.</span>
