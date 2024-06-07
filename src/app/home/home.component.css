@@ -16,7 +16,7 @@
   }
   
   .footer {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.842);
     color: white;
     padding: 10px;
     text-align: center;
@@ -279,7 +279,7 @@
   
   .footer {
     /* background-color: #000; */
-    padding: 50px 0;
+    padding: 8px 0;
     color: rgb(124, 180, 68);
   }
   
@@ -324,7 +324,7 @@
   
   p{
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    color: rgba(100, 16, 16, 0.813);
+    color: white;
     font-size:larger;
   }
   /* .typewriter {
@@ -344,11 +344,3 @@
     from, to { border-color: transparent }
     50% { border-color: orange }
   } */
-  
-  
-  
-  
-  
-  
-  
-  
