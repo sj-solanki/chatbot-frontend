@@ -3,11 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
+import { SignInComponent } from './Components/sign-in/sign-in.component';
+import { SignUpComponent } from './Components/sign-up/sign-up.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { RouterModule} from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './Components/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalComponent } from './modal/modal.component';
 

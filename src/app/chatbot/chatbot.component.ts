@@ -190,17 +190,17 @@ export class ChatbotComponent implements AfterViewChecked {
 
   showForm(courseId: string, providerId: string) {
     const formHtml = this.sanitizer.bypassSecurityTrustHtml(`
-      <form id="user-details-form">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br>
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age"><br>
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="phone"><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br>
-        <button type="submit">Submit</button>
-      </form>
+      <form id="user-details-form" style="display: flex; flex-direction: column; gap: 5px; background-color: #fff; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
+      <label for="name" style="font-weight: bold;">Name:</label>
+      <input type="text" id="name" name="name" style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+      <label for="age" style="font-weight: bold;">Age:</label>
+      <input type="number" id="age" name="age" style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+      <label for="phone" style="font-weight: bold;">Phone:</label>
+      <input type="text" id="phone" name="phone" style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+      <label for="email" style="font-weight: bold;">Email:</label>
+      <input type="email" id="email" name="email" style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+      <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Submit</button>
+    </form>
     `);
     this.messages.push({ sender: 'bot', content: 'Please fill the below details to continue' });
     this.messages.push({ sender: 'bot', content: formHtml });

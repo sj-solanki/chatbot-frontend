@@ -19,12 +19,12 @@
           <ng-container *ngIf="response.message.order.items[0]['add-ons'] && response.message.order.items[0]['add-ons'].length > 0">
             <ng-container *ngFor="let media of response.message.order.items[0]['add-ons'][0].descriptor.media">
               <p *ngIf="media.url">
-                <strong>YouTube Link:</strong> <a [href]="media.url" target="_blank">Watch Video</a>
+                <strong>Content Link:</strong> <a [href]="media.url" target="_blank">Watch Video</a>
               </p>
             </ng-container>
           </ng-container>
           <ng-container *ngIf="!response.message.order.items[0]['add-ons'] || response.message.order.items[0]['add-ons'].length === 0">
-            <p><strong>YouTube Link:</strong> N/A</p>
+            <p><strong>Content Link:</strong> N/A</p>
           </ng-container>
 
           <p><strong>Price:</strong> {{ response.message.order.items[0].price.value }} {{ response.message.order.items[0].price.currency }}</p>
@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" (click)="nextAction()">Next</button>
+       <!-- <button class="btn btn-primary" (click)="nextAction()">Next</button>--> 
       <button class="btn btn-secondary" (click)="closeModal()">Close</button>
     </div>
   </div>
