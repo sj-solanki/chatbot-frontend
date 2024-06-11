@@ -16,14 +16,26 @@
           <p><strong>Short Description:</strong> {{ response.message.order.items[0].descriptor.short_desc }}</p>
           <p><strong>Long Description:</strong> {{ response.message.order.items[0].descriptor.long_desc }}</p>
           
-          <ng-container *ngIf="response.message.order.items[0]['add-ons'] && response.message.order.items[0]['add-ons'].length > 0">
-            <ng-container *ngFor="let media of response.message.order.items[0]['add-ons'][0].descriptor.media">
+          <!-- Handle media from descriptor -->
+          <ng-container *ngIf="response.message.order.items[0].descriptor.media && response.message.order.items[0].descriptor.media.length > 0">
+            <ng-container *ngFor="let media of response.message.order.items[0].descriptor.media">
               <p *ngIf="media.url">
                 <strong>Content Link:</strong> <a [href]="media.url" target="_blank">Watch Video</a>
               </p>
             </ng-container>
           </ng-container>
-          <ng-container *ngIf="!response.message.order.items[0]['add-ons'] || response.message.order.items[0]['add-ons'].length === 0">
+
+          <!-- Handle media from stops -->
+          <ng-container *ngIf="response.message.order.fulfillments[0].stops[0].instructions.media && response.message.order.fulfillments[0].stops[0].instructions.media.length > 0">
+            <ng-container *ngFor="let media of response.message.order.fulfillments[0].stops[0].instructions.media">
+              <p *ngIf="media.url">
+                <strong>Content Link:</strong> <a [href]="media.url" target="_blank">Watch Video</a>
+              </p>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="!(response.message.order.items[0].descriptor.media && response.message.order.items[0].descriptor.media.length > 0) &&
+                                !(response.message.order.fulfillments[0].stops[0].instructions.media && response.message.order.fulfillments[0].stops[0].instructions.media.length > 0)">
             <p><strong>Content Link:</strong> N/A</p>
           </ng-container>
 
@@ -38,7 +50,6 @@
       </div>
     </div>
     <div class="modal-footer">
-       <!-- <button class="btn btn-primary" (click)="nextAction()">Next</button>--> 
       <button class="btn btn-secondary" (click)="closeModal()">Close</button>
     </div>
   </div>

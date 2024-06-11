@@ -149,10 +149,10 @@ export class ChatbotComponent implements AfterViewChecked {
     const htmlContent = `
       <div>
         <p><strong>Title:</strong> ${course.title}</p>
-        <p><strong>Description:</strong> ${course.description}</p>
+        
         <p><strong>Provider Name:</strong> ${course.provider_name}</p>
         <p><strong>Language:</strong> ${course.language}</p>
-        <p><strong>Min Age:</strong> ${course.minAge}</p>
+       
         <button class="enroll-button" data-course-id="${course.item_id}" data-provider-id="${course.provider_id}">More Info</button>
       </div>
     `;
