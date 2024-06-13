@@ -1,41 +1,44 @@
-<div class="image">
-<div class="chatbox">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <div class="chat-header btn-gradient-20">
-    Chatbot
-    <button class="clear-chat" (click)="clearChat()">Clear Chat</button>
-  </div>
-  <div class="chat-messages" #chatMessages>
-    <div class="message" *ngFor="let message of messages">
-      <div class="bubble-container" [ngClass]="message.sender === 'user' ? 'right' : 'left'">
-        <img *ngIf="message.sender === 'bot'" src="assets/img/chatIcon.png" alt="Chatbot Icon" class="icon">
-        <div class="bubble" [ngClass]="message.sender === 'user' ? 'user-bubble' : 'bot-bubble'" [innerHTML]="message.content"></div>
-        <img *ngIf="message.sender === 'user'" src="assets/img/userIcon.png" alt="User Icon" class="icon">
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm mt-5">
+        <div class="card-header  text-white">
+          Chatbot
+          <button class="btn btn-success float-end " (click)="clearChat()" id="clear">Clear Chat</button>
+        </div>
+        <div class="card-body chat-messages" #chatMessages>
+          <div class="message" *ngFor="let message of messages">
+            <div class="bubble-container" [ngClass]="message.sender === 'user' ? 'justify-content-end text-end' : 'justify-content-start text-start'">
+              <img *ngIf="message.sender === 'bot'" src="assets/img/chatIcon.png" alt="Chatbot Icon" class="icon me-2">
+              <div class="bubble p-2 rounded" [ngClass]="message.sender === 'user' ? 'bg-light text-dark' : 'bg-secondary text-white'" [innerHTML]="message.content"></div>
+              <img *ngIf="message.sender === 'user'" src="assets/img/userIcon.png" alt="User Icon" class="icon ms-2">
+            </div>
+          </div>
+          
+          <div *ngIf="loading" class="loading-message text-center">
+            <span class="loading-text me-1">Loading</span>
+            <span class="dot1">.</span>
+            <span class="dot2">.</span>
+            <span class="dot3">.</span>
+          </div>
+        </div>
+        <div class="card-footer bg-light chat-input">
+          <div class="d-flex align-items-center">
+            <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" class="form-control me-2" placeholder="Type a message...">
+            <button class="btn " (click)="sendMessage()"><i class="bi bi-send-fill"></i></button>
+            <div class="voice-icon ms-2">
+              <button class="btn " (click)="toggleMicrophone()" >
+                <!-- <i class="fa fa-microphone" [ngClass]="{ 'active-microphone': isMicrophoneActive }"></i> -->
+                <i class="bi bi-mic-fill " [ngClass]="{ 'active-microphone': isMicrophoneActive }"></i>
+              </button>
+            </div>
+            <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange($event)" class="form-select ms-2">
+              <option value="en-US">English</option>
+              <option value="hi-IN">Hindi</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <div *ngIf="loading" class="loading-message">
-      <span class="loading-text">Loading</span>
-      <span class="dot1">.</span>
-      <span class="dot2">.</span>
-      <span class="dot3">.</span>
-    </div>
   </div>
-  <div class="chat-input">
-    <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message...">
-    <div class="voice-icon">
-      <button class="btn" (click)="toggleMicrophone()">
-        <i class="fa fa-microphone" [ngClass]="{ 'active-microphone': isMicrophoneActive }" style="font-size:36px"></i>
-      </button>
-    </div>
-    <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange($event)">
-      <option value="en-US">English</option>
-      <option value="hi-IN">Hindi</option>
-    </select>
-    <div class="send-icon">
-      <button class="btn" (click)="sendMessage()"><i class="fa fa-send" style="font-size:36px"></i></button>
-    </div>
-  </div>
-  <ng-template #modalContainer></ng-template>
-</div>
 </div>
