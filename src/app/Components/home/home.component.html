@@ -1,6 +1,11 @@
-<div class="container-fluid">
-  <header class="header">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-horizontal">
+<head>
+  <!-- Add this in the <head> section of your HTML file -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+</head><body>
+  <header class="header" >
+    
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-horizontal">
       <a class="navbar-brand" href="#">
         <img src="/assets/img/chatIcon.png" alt="icon" style="height: 50px; margin-right: 10px; margin-left: 10px;">AgroWhiz
       </a>
@@ -9,31 +14,61 @@
         <button class="nav-link btn btn-link mr-2" routerLink="/sign-up">Sign Up</button>
         <button class="nav-link btn btn-link" routerLink="/chatbot">Get Assistant</button>
       </div>
+    </nav> -->
+    <nav class="navbar navbar-expand-lg  fixed-top navbar-dark m-3" >
+      <div class="container-fluid ">
+        <a class="navbar-brand" href="#">
+          <img src="/assets/img/chatIcon.png" alt="icon" style="height: 50px; margin-right: 10px; margin-left: 10px;">AgroWhiz
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end " id="navbarNav">
+          <ul class="navbar-nav">
+           <li class="nav-item">
+            <button class="nav-link btn btn-link mx-3 my-2 p-2 text-white" routerLink="/sign-in">Login</button>
+           </li>
+            <li class="nav-item">
+              <button class="nav-link btn btn-link mx-3 my-2 p-2  text-white" routerLink="/chatbot">Get Assistant</button>
+            </li>
+          </ul>
+        </div> 
+      </div>
     </nav>
+
     
   </header>
+  <div class="container-fluid ">
   
   <main *ngIf="isHomePage" style="margin-top:30px">
     <div class="tagline">
       <h2>AgroWhiz - Revolutionizing Farming with Smart Solutions for a Sustainable Future</h2>
     </div>
     <section id="home">
-      <div class="container">
+      <div class="container mt-2">
         <div class="row">
-          <div class="col-lg-4 col-md-12 col-sm-12 mt-5">
-            <div class="row">
-              <div class="col text-center">
-                <h2>AgroWhiz</h2>
-                <p class="ms-5">- Your Farming Assistant</p>
-                <div class="container mt-5">
-                  <p>Boost your Farm Productivity</p>
-                  <p>Get instant farming <br> solutions here.</p>
+          <div class="col-lg-4 col-md-12 col-sm-12 mt-5 ">
+            <div class="row  " >
+              <div class="col">
+                <h2 class="text-center">AgroWhiz</h2>
+                <p class="ms-5 text-center">- Your Farming Assistant</p>
+            
+
+              </div>
+              <div class="row mt-2">
+                <div class="col ms-5">
+                 
+                  
+                    <div class="text-center m-3"><a routerLink="/chatbot"><button type="submit" class="btn text-white">Get instant solutions here.</button></a></div>
+                
                 </div>
+
               </div>
             </div>
           </div>
           <div class="col-lg-8 col-md-12 col-sm-12">
-            <div class="text-center"><img src="/assets/img/home1.gif" alt="" id="img-home" class="img-fluid"></div>
+            <div class="text-center"><img src="/assets/img/farmershomebg.jpeg" alt="" id="img-home" class="img-fluid"></div>
           </div>
         </div>
       </div>
@@ -41,10 +76,10 @@
     <section id="who-am-i" class="section">
       <div class="container p-5">
         <div class="row">
-          <div class="col-md-6">
-            <h2 class="section-title mx-5">Who Am I?</h2>
+          <div class="col-md-6" id="para-who">
+            <h2 class="section-title mx-5 mt-2">Who Am I?</h2>
             <div class="section-content">
-              <div class="bullet-points">
+              <div class="bullet-points ms-4">
                 <ul>
                   <li>24/7 assistance for farmers</li>
                   <li>Integrated with Beckn protocol</li>
@@ -62,7 +97,7 @@
       </div>
     </section>
     <section id="contact-us" class="section">
-      <div class="container p-5">
+      <div class="container">
         <div class="row">
           <div class="col-md-6">
             <h2 class="section-title">Contact Us</h2>
@@ -78,7 +113,7 @@
                 <div class="form-group mt-3">
                   <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
                 </div>
-                <div class="text-center m-3"><button type="submit" class="btn text-dark">Send Message</button></div>
+                <div class="text-center m-3"><button type="submit" class="btn text-white">Send Message</button></div>
               </form>
             </div>
           </div>
@@ -103,7 +138,11 @@
     </section>
   </main>
   <router-outlet></router-outlet>
-  <footer class="footer">
-    <p>&copy; 2024 AgroAssist</p>
+  <footer class="footer" >
+    <h6 class="text-center">&copy; 2024 AgroAssist</h6>
   </footer>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
