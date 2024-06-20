@@ -38,6 +38,13 @@ export class SignUpComponent {
     console.log("sign up ON Submit");
     const user = { fullname: this.fullname ,email: this.email, password: this.password };
     this.http.post('http://localhost:3000/signup', user).subscribe(response => {
+      const res: any = response; 
+
+     
+      if (res.message && res.message.length > 0) {
+        alert(res.message); 
+      }
+       
       console.log(response);
     });
   }
